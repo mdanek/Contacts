@@ -17,10 +17,14 @@ class ListContacts extends Component {
         }))
     }
 
+    clearQuery = () => {
+        this.updateQuery('')
+    }
+
     render() {
 
         const { query } = this.state
-        const { contacts } = this.props
+        const { contacts, onDeleteContact } = this.props
 
         const showingContacts = query === ""
             ? contacts
@@ -35,10 +39,19 @@ class ListContacts extends Component {
                         className='search-contacts'
                         type='text'
                         placeholder='Search Contacts'
-                        value={this.state.query}
+                        value={query}
                         onChange={(event) => this.updateQuery(event.target.value)}
                     />
                 </div>
+
+                {showingContacts.length !== contacts.length && (
+                    <div className='showing-contacts'>
+                        <span>Not showing {showingContacts.length} of {
+                            contacts.length}</span>
+                        <button onClick={this.clearQuery}>Show all</button>
+                    </div>
+                )}
+
                 <ol className='contact-list'>
                     {showingContacts.map((contact) =>
                     <li key={contact.id} className='contact-list-item'>
@@ -53,7 +66,7 @@ class ListContacts extends Component {
                             <p>{contact.handle}</p>
                         </div>
                         <button 
-                            onClick={() => this.props.onDeleteContact(contact)}
+                            onClick={() => onDeleteContact(contact)}
                             className='contact-remove'>
                             Remove
                         </button>
